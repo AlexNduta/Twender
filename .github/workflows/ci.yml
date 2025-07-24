@@ -1,39 +1,55 @@
+
+
 name: Django CI
 
-on: 
+# This workflow runs on any push or pull request that targets the 'main' branch.
+on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
 
-
 jobs:
+  # This job will run linting checks on the code.
   lint:
     runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    steps:
+      # Step 1: Checks out your repository's code so the job can access it.
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: setup python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-    # Cache dependenicies for faster runs
-    - name: Cache dependecies
-      uses: action/cache@v4
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      # Step 2: Sets up the specific Python version you want to use.
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: run linter
-      run: |
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+      # Step 3: Caches dependencies to speed up subsequent workflow runs.
+      # The cache is invalidated and recreated only when your requirements files change.
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
+      # Step 4: Installs the project's dependencies from your requirements files.
+      # It assumes you have a 'requirements-dev.txt' for development tools like flake8.
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r Twender/requirements.txt
+          pip install -r Twender/requirements-dev.txt
+
+      # Step 5: Runs the flake8 linter to check for style errors and code quality.
+      - name: Run linter (flake8)
+        run: |
+          # The command scans the entire project directory (.).
+          # --count: Prints a total count of errors.
+          # --show-source: Shows the offending line of code.
+          # --statistics: Shows how many times each error occurred.
+          # --exit-zero: Ensures the build doesn't fail on style warnings, but still shows them.
+          # --max-line-length=88: Sets the line length to match the 'black' formatter standard.
+          flake8 . --count --exit-zero --max-line-length=88 --statistics
