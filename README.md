@@ -12,7 +12,6 @@
 ### Users
 
 
-
 ### Trips
 
 
