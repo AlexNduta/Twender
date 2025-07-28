@@ -52,3 +52,7 @@ jobs:
           # --exit-zero: Ensures the build doesn't fail on style warnings, but still shows them.
           # --max-line-length=88: Sets the line length to match the 'black' formatter standard.
           flake8 . --count --exit-zero --max-line-length=88 --statistics
+
+      - name: Run tests
+        run: | 
+          python manage.py test
