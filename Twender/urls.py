@@ -20,12 +20,31 @@ from rest_framework.routers import DefaultRouter
 from Users.views import UserViewSet
 from Trips.views import TripViewset 
 
+# simple JWT imports
+from rest_framework_simplejwt.views import (
+        TokenObtainPairView,
+        TokenRefreshView,
+        )
+
 # create routers and register our viewsets with it
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'trips', TripViewset)
 
+
+api_urlpatterns = [
+    # urls from the router
+    path('', include(router.urls)),
+
+    # urls for JWT authentication
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh_pair'),
+        ]
+
+# main url patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)), # all API urls will be under  /api/
+    
+    path('api/', include(api_urlpatterns)), # all API urls will be under  /api/
+
 ]
