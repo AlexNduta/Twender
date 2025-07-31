@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'Users',
     'Trips',
+    'Routes',
+    'Payments'
 ]
 
 MIDDLEWARE = [
@@ -92,8 +94,7 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
-        """django.contrib.auth.password_validation.
-        UserAttributeSimilarityValidator""",
+        """django.contrib.auth.password_validation.UserAttributeSimilarityValidator""",
     },
     {
         'NAME':

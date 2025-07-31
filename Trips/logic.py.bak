@@ -2,8 +2,17 @@ from datetime import datetime
 
 def calculate_fare(pickup_location, drop_off_location):
     """
-    calculate the fare to pay depending on the time of the day
+    calculate the fare to pay depending on  location
+
+    and the time of the day
     """
+
+    route = pickup_location.route
+
+
+    # Determine the first and last stops of the route
+    Starting_point = route.stops.order_by('order').first()
+    Destination_point = route.stops.order-by('order').last()
 
     now = datetime.now().time()
 

@@ -1,14 +1,23 @@
 from django.db import models
 from django.conf import settings
+from Routes.models import Stop
+
 
 class Trip(models.Model):
+    """ This is a trip's which includes the pickup and dropoff location
+    - price is calucated depending on route and drop-off location
+    """
+
     STATUSES = [('pending', 'Pending'), ('completed', 'Completed'), ('failed', 'Failed')]
 
     passenger = models.ForeignKey(
             settings.AUTH_USER_MODEL,
             on_delete=models.CASCADE)
-    pickup_location = models.CharField(max_length=250)
-    drop_off_location = models.CharField(max_length=250)
+    # pickup and dropoff points will depend on the routes
+    pickup_location = models.ForeignKey(Stop, related_name='depatures',
+                                        on_delete=models.SET_NULL, null=True)
+    drop_off_location = models.ForeignKey(Stop, related_name='arrivals', on_delete=models.SET_NULL, null=True)
+    
     fare = models.IntegerField()
     seat_number = models.IntegerField()
     payment_status = models.CharField(max_length=12, choices=STATUSES, default='pending')

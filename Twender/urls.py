@@ -17,8 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
+# views import
 from Users.views import UserViewSet
-from Trips.views import TripViewset 
+from Trips.views import TripViewset
+from Routes.views import RouteViewSet, StopViewSet
 
 # simple JWT imports
 from rest_framework_simplejwt.views import (
@@ -30,6 +33,8 @@ from rest_framework_simplejwt.views import (
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'trips', TripViewset)
+router.register(r'routes', RouteViewSet)
+router.register(r'stops', StopViewSet)
 
 
 api_urlpatterns = [
