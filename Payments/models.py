@@ -15,5 +15,8 @@ class Payment(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def get_callback_urls(self):
+        return reverse('mpesa_callback')
+
     def __str__(self):
         return f"payment of {self.amount} for Trip {self.trip.id}"

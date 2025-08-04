@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'Users',
     'Trips',
     'Routes',
-    'Payments'
+    'drf_spectacular',
+    #'Payments',
+    #'django-daraja',
 ]
 
 MIDDLEWARE = [
@@ -138,5 +140,25 @@ AUTH_USER_MODEL = 'Users.User'
 REST_FRAMEWORK = {
         'DEFAULT_AUTHENTICATION_CLASSES': (
             'rest_framework_simplejwt.authentication.JWTAuthentication',
-            )
+            ),
+         'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
         }
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Twender',
+    'DESCRIPTION': 'API documentation for the Twender  application.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
+# core/settings.py
+
+# MPESA Configuration
+# settings.py
+# DARJA API CREDENTIALS
+"""
+DARJA_CONSUMER_KEY = "0UY5IMgV8AO4GXQssXS9gZr2SXStALDWkvuG688nhG1jr7Ln"
+DARJA_CONSUMER_SECRET = "8F4kveACYNlIzEwNaVU7dKuiEpWgxQOt43Mv1g8jMBse7YjtiEuw6IKOoIDA7jP9"
+DARJA_ENVIRONMENT = "sandbox" # Use "live" for production
+"""

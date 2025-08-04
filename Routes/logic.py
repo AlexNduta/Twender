@@ -13,7 +13,7 @@ def calculate_fare(pickup_stop, dropoff_stop):
     # Determine the first and last stops of the route by sorting the the route which 
     # is an integer given to identify the route from source to destination
     first_stop_on_route = route.stops.order_by('order').first()
-    last_stop_on_route = route.stops.order-by('order').last()
+    last_stop_on_route = route.stops.order_by('order').last()
 
     # check if its a full journey
     # example: path_to_destination = nairobi -> thika,
