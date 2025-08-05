@@ -6,7 +6,7 @@
     - Trips Apps: Manages journeys - creating trips, calculating fares, view trip history
     - Payment App: Handlin payment logic
     - Conductors App: conductor app for viewing pasengers and confirming payments
-
+![Twender-User-flow.png](Twender-User-flow.png)
 
 
 ### Users
