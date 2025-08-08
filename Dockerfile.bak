@@ -1,0 +1,56 @@
+
+# Builder stage
+FROM python:3.10-slim as builder
+
+# environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Our working directory in the container
+WORKDIR /app
+
+# install mysql dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends default-libmysqlclient-dev build-essential pkg-config
+
+# create a virtual environment
+RUN python -m venv /opt/venv
+# activate the virtual environment
+ENV PATH="/opt/venv/bin:$PATH"
+
+# copy and install python dependencies in to the virtual environment
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# create production image
+
+FROM python:3.10-slim
+
+
+# set environmental variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+
+# set a non-root user for security
+RUN groupadd -r django && useradd -r -g django django
+RUN mkdir -p /home/django
+RUN chown -R django:django /home/django
+WORKDIR /home/django/app
+
+# copy the virtual environment from the builder stage
+RUN mkdir -p /opt/venv
+COPY --from=builder /opt/venv /opt/venv
+# copy the application code
+COPY . .
+
+# Activate the virtual environment
+ENV PATH="/opt/venv/bin:$PATH"
+
+# switch to the non-root user
+USER django
+
+# expose the port Gunicorn will run on
+EXPOSE 8000
+
+# commands to run the application in production
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]

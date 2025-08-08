@@ -2,28 +2,25 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: twender-db
+    env_file:
+      - ./.env
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=myrutpass
-      - MYSQL_DATABASE=twender_db
-      - MYSQL_USER=was
-      - MYSQL_PASSWORD=mypass
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
   web:
     build: .
-    container_name: twender-app
     command: python manage.py runserver 0.0.0.0:8000
-    volumes: 
-      - .:/app
+    env_file:
+      - ./.env
+    volumes:
+      - .:/home/django/app
     ports:
       - "8000:8000"
-    environment:
-      - DB_NAME=twender_db
-      - DB_USER=was
-      - DB_PASSWORD=mypass
-      - DB_HOST=db
     depends_on:
       - db
 

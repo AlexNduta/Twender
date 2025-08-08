@@ -10,11 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
+#from dotenv import load_dotenv
+from decouple import config
 from pathlib import Path
 from decouple import config 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# load_dotenv() # load environment variables from the `.env` file
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -26,7 +31,7 @@ django-insecure-n%t131#q7-u%eim5((+k(j8g0fsu*z@5&21_i9ubu-*q&_c9$4 """
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
 
 
 # Application definition
@@ -83,17 +88,13 @@ WSGI_APPLICATION = 'Twender.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-   # 'default': {
-    #    'ENGINE': 'django.db.backends.sqlite3',
-     #   'NAME': BASE_DIR / 'db.sqlite3',
-    #}
     'default':{
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME', default='twender_db'),
-        'USER': config('DB_USER', default='was'),
-        'PASSWORD': config('DB_PASSWORD', default='mypass'),
-        'HOST': config('DB_HOST', default='localhost'),
-        'PORT': '3306',
+        'NAME': config('MYSQL_DATABASE'),
+        'USER': config('MYSQL_USER'),
+        'PASSWORD': config('MYSQL_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default='3306'),
         }
 }
 

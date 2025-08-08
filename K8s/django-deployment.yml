@@ -1,0 +1,81 @@
+# k8s/django-deployment.yml
+
+# --- The Service for the Django App ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-service
+  namespace: app-tier
+spec:
+  selector:
+    app: django
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+
+---
+
+# --- The Deployment for the Django App ---
+apiVersion: apps/v1
+kind: Deployment # Corrected typo
+metadata:
+  name: django-deployment # Corrected typo
+  namespace: app-tier
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: django
+  template:
+    metadata:
+      labels:
+        app: django
+    spec:
+      initContainers:
+        - name: database-migrations
+          image: wasremoved/twender:latest
+          command: ["python", "manage.py", "migrate"]
+          env:
+            - name: ALLOWED_HOSTS
+              value: "twender.local, localhost"
+            - name: SECRET_KEY
+              value: "a-temporary-key-for-migrations"
+            - name: MYSQL_DATABASE
+              value: "twender_db"
+            - name: MYSQL_USER
+              value: "was"
+            - name: DB_HOST
+              value: "mysql-service.data-tier"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+      containers:
+        - name: django-app # Corrected name for clarity
+          image: wasremoved/twender:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: ALLOWED_HOSTS
+              value: "twender.local, localhost"
+            - name: SECRET_KEY
+              valueFrom: # Use the Kubernetes Secret
+                secretKeyRef:
+                  name: django-secret
+                  key: SECRET_KEY
+            - name: DEBUG
+              value: 'False'
+            - name: MYSQL_DATABASE
+              value: "twender_db"
+            - name: MYSQL_USER
+              value: "was"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+            - name: DB_HOST # Added missing host
+              value: "mysql-service.data-tier"
+          # The volumeMounts and volumes sections have been removed as they are not needed here.

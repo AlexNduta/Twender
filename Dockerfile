@@ -1,20 +1,31 @@
-FROM python:3.10-slim
 
+# Builder stage
+FROM python:3.10-bullseye
+
+# environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+
+
+# install mysql dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends default-libmysqlclient-dev build-essential pkg-config
 
 # Our working directory in the container
 WORKDIR /app
 
-# install mysql dependencies
-RUN apt-get update && apt-get install -y default-libmysqlclient-dev build-essential pkg-config
-
-# copy and install python dependencies
+# copy and install python dependencies in to the virtual environment
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# copy project code into the container
 COPY . .
 
-#EXPOSE 8000
-#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN groupadd -r django && useradd -r -g django django
+RUN chown -R django:django /app
+
+# switch user
+USER django
+
+EXPOSE 8000
+
+# commands to run the application in production
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "Twender.wsgi:application"]

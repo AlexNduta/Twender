@@ -1,54 +1,48 @@
 # Twender
+- A Django REST framework API designed to act as a virtual matatu(public transport system) conductor by managing payments and passenger trips.
+- The application features role-based access for passengers and condutors
+
+## Features
+- User registration and JWT Authentication
+- Role-Based access Control(passenger)
+- Dynamic fare calculation based on dynamic routes, stops and peak-hours
+- passenger endpoints to create trips
+- conductor-only endpoint to view passenger destination and payment statuses
+- conductor-only ability to update the payment status
 
 ## Structure
 -Twender
     - Users App: Handles user registration, login an profiles
+
     - Trips Apps: Manages journeys - creating trips, calculating fares, view trip history
+
     - Payment App: Handlin payment logic
+    
     - Conductors App: conductor app for viewing pasengers and confirming payments
 ![Twender-User-flow.png](Twender-User-flow.png)
 
 
-### Users
-- These are the end users of the application
-- 
+# API documentation
+- This API is documented using Swagger/OpenAPI. Once the project is running, the interactive documentation can be accessed at http://127.0.0.1:8000/api/schema/swagger-ui/
 
-### Trips
-- These are the trips a user takes
-- A trips are divided into routes which in-turn are sub-divided into stops e.g 
-    Route: Thika Road
-        stops: Nairobi CBD 
-                Nagara
-                Muthaiga
-                Survery
-                Allsoaps
-                Garden City
-                Roysambu
-                Githurai
-                Wendani
-                KU
-                Bypass
-                Kihunguro
-                Ruiru
-                Kairo
-                Kimbo
-                Toll
-                Kroad
-                Juja
-                Seawage
-                Witeithie
-                Jomoko
-                Thika Town
-- each stop has its own order number to save the user the headache of making the typo
-- A complete trip is one that has a specified `pickup_location` and `drop_off_locations`
-- Depending on the time, the app automatically calculates the `fare` amount a user should pay
-- 
+# Database Schema (ERD):
+The database was designed to normalize route and user data. The Entity-Relationship Diagram can be viewed [here](https://drive.google.com/file/d/1TQM27c3QBKhCLC-oX_obyzpiyrLpI4F3/view?usp=drive_link)
 
-### Payments
-- MVP version requires you to make manual payments and the conductor confirms and updates the payment status
-- The main app should have a specified payment gateway setup
 
-### Conductor app
-- The conductor is like an administrator, they get to see the list of people in the matatu and the their stops.
-- A conductor can also make updates to the payment status from `pending` to `completed` once he/she confirms
+# Getting Started / Local Development:
 
+    - Prerequisites (`git`, `Python 3.10+`, `Docker`).
+
+    - Clone the repository: git clone ...
+
+    - Set up the `.env` file .
+
+    - Build and run with Docker Compose: `docker-compose up --build`
+
+    - Run database migrations: `docker-compose exec web python manage.py migrate`
+# Technology Stack:
+
+ - Backend: Django, Django REST Framework
+ - Database: MySQL
+ - Containerization: Docker, Docker Compose
+ - API Documentation: drf-spectacular (Swagger/OpenAPI)

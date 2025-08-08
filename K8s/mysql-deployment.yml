@@ -1,0 +1,67 @@
+# mysql service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: data-tier
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+
+  clusterIP: None
+
+---
+
+# statefulset for mysql
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-statefulset
+  namespace: data-tier
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  serviceName: "mysql-service" # link to the service above
+  template:
+    metadata:
+      labels:
+        app: mysql # pods with this label are managed by statefulset
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        ports:
+          - containerPort: 3306
+        env:
+          # set user and DB name directly
+          - name: MYSQL_USER
+            value: "was"
+          - name: MYSQL_DATABASE
+            value: "twender_db"
+          # get the passwords from the kubernetes secret
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: MYSQL_PASSWORD
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: MYSQL_ROOT_PASSWORD
+        volumeMounts:
+          # mount the persistent storage into the container
+          - name: mysql-persistent-storage
+            mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+
+
+
