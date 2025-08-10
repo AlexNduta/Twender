@@ -21,3 +21,6 @@
 ## MySQL Database
 - Stores all data processed by the django app
 - offers data on-request
+
+# The architecture
+![k8s-architecture.png](k8s-architecture.png)
