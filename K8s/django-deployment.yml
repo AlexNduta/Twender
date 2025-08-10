@@ -38,7 +38,7 @@ spec:
           command: ["python", "manage.py", "migrate"]
           env:
             - name: ALLOWED_HOSTS
-              value: "twender.local, localhost"
+              value: "twender.hostnoma.one, localhost"
             - name: SECRET_KEY
               value: "a-temporary-key-for-migrations"
             - name: MYSQL_DATABASE
@@ -52,14 +52,24 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: MYSQL_PASSWORD
+            # Container 2: for collecting static
+        #- name: collect-static
+         # image: wasremoved/twender:latest
+          #command: ["python", "manage.py", "collectstattic", "--noinput"]
+          #env:
+           # - name: SECRETE_KEY
+           #   value: "temporary-key-for-static"
+           # - name: DEBUG
+            #  value: "False"
       containers:
+        # main container
         - name: django-app # Corrected name for clarity
           image: wasremoved/twender:latest
           ports:
             - containerPort: 8000
           env:
             - name: ALLOWED_HOSTS
-              value: "twender.local, localhost"
+              value: "twender.hostnoma.one, localhost"
             - name: SECRET_KEY
               valueFrom: # Use the Kubernetes Secret
                 secretKeyRef:

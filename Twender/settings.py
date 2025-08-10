@@ -56,6 +56,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -171,3 +173,7 @@ DARJA_CONSUMER_KEY = "0UY5IMgV8AO4GXQssXS9gZr2SXStALDWkvuG688nhG1jr7Ln"
 DARJA_CONSUMER_SECRET = "8F4kveACYNlIzEwNaVU7dKuiEpWgxQOt43Mv1g8jMBse7YjtiEuw6IKOoIDA7jP9"
 DARJA_ENVIRONMENT = "sandbox" # Use "live" for production
 """
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='').split(',')

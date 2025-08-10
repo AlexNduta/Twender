@@ -3,12 +3,26 @@ kind: Ingress
 metadata:
   name: django-ingress
   namespace: app-tier
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: "traefik"
 spec:
+  tls:
+  - hosts:
+    - twender.hostnoma.one
+    secretName: twender-tls-secret
   rules:
-    - host: twender.local # local test hostname
+    - host: twender.hostnoma.one 
       http:
         paths:
-          - path: /
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: django-service
+                port:
+                  number: 8000
+          - path: /admin
             pathType: Prefix
             backend:
               service:

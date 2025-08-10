@@ -19,6 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+
 RUN groupadd -r django && useradd -r -g django django
 RUN chown -R django:django /app
 
